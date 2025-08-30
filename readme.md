@@ -1,3 +1,5 @@
+this is for musicians
+
 For creating (DATABASE) follow these commands
 
 
