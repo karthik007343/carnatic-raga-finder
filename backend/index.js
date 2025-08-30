@@ -1,11 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2/promise");
-
+const dotenv = require('dotenv')
 const app = express();
-
+dotenv.config()
 app.use(cors());
 app.use(express.json());
+
 
 // ---------- DB ----------
 let db;
@@ -13,7 +14,7 @@ async function initDB() {
   db = await mysql.createPool({
     host: "localhost",
     user: "root",
-    password: "karthik@9959",
+    password: process.env.PASSWORD,
     database: "carnaticdb",
     waitForConnections: true,
     connectionLimit: 10,
