@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Find Raga Notes</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    input, button {
+      padding: 8px;
+      font-size: 16px;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      background: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+  <h2>🎶 Raga Finder</h2>
+  <label for="raga">Enter Raga Name:</label>
+  <input type="text" id="raga" placeholder="e.g. Kalyani">
+  <button onclick="findNotes()">Search</button>
+
+  <div id="result"></div>
+
+  <script>
+    async function findNotes() {
+      const raga = document.getElementById("raga").value.trim();
+      const resultDiv = document.getElementById("result");
+      resultDiv.innerHTML = "Loading...";
+
+      try {
+        const res = await fetch("http://localhost:5000/find-notes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ raga })
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          resultDiv.innerHTML = `<span style="color:red">❌ ${err.message || err.error}</span>`;
+          return;
+        }
+
+        const data = await res.json();
+        resultDiv.innerHTML = `
+          <h3>${data.name}</h3>
+          <p><b>Notes:</b> ${data.notes}</p>
+          <p><b>Arohanam:</b> ${data.arohanam}</p>
+          <p><b>Avarohanam:</b> ${data.avarohanam}</p>
+        `;
+      } catch (e) {
+        resultDiv.innerHTML = `<span style="color:red">⚠️ Error: ${e.message}</span>`;
+      }
+    }
+  </script>
+</body>
+</html>
